@@ -9,11 +9,39 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy
+    name: Deploy to Cloudflare Workers
+
     steps:
+      # Checkout the repository
       - uses: actions/checkout@v4
-      - name: Deploy
+
+      # Set up Node.js (to ensure the correct environment)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'  # Recommended to ensure compatibility with Wrangler
+
+      # Optionally: Cache `node_modules` to speed up subsequent runs (if dependencies are a bottleneck)
+      # - name: Cache node modules
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: node_modules
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
+
+      # Install Wrangler globally (in case it's not properly installed by default)
+      - name: Install Wrangler
+        run: npm install -g @cloudflare/wrangler
+
+      # Install npx explicitly to ensure it is available
+      - name: Install npx
+        run: npm install -g npx
+
+      # Deploy using Wrangler action
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          quiet: true  # Corrected typo, added quiet mode
