@@ -19,11 +19,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'  # Ensure compatibility with Wrangler
+          node-version: '16.x'
 
-      # Install Wrangler globally (in case it's not properly installed by default)
-      - name: Install Wrangler
-        run: npm install -g @cloudflare/wrangler
+      # Install the latest version of Wrangler (v3.x.x)
+      - name: Install Latest Wrangler
+        run: npm install -g wrangler
 
       # Deploy using Wrangler action
       - name: Deploy to Cloudflare Workers
@@ -31,4 +31,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          quiet: true  # Corrected typo, added quiet mode
+          quiet: true
